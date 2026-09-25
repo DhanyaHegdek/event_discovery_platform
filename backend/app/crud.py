@@ -65,21 +65,24 @@ def create_event(
 
     return db_event
 
-def update_event(
-    db: Session,
-    event_id: int,
-    event: schemas.EventUpdate
-):
-    db_event = get_event(db, event_id)
+def update_event(db, event_id, event):
+    db_event = db.query(models.Event).filter(
+        models.Event.id == event_id
+    ).first()
 
     if not db_event:
         return None
 
-    update_data = event.model_dump(
-        exclude_unset=True
-    )
+    event_data = event.model_dump()
 
-    for key, value in update_data.items():
+    # Convert Pydantic HttpUrl objects to normal strings
+    if event_data.get("website"):
+        event_data["website"] = str(event_data["website"])
+
+    if event_data.get("image"):
+        event_data["image"] = str(event_data["image"])
+
+    for key, value in event_data.items():
         setattr(db_event, key, value)
 
     db.commit()
