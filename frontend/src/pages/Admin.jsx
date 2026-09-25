@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
 import {
@@ -30,6 +31,7 @@ function Admin() {
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const loadEvents = async () => {
     try {
@@ -87,6 +89,13 @@ function Admin() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("evently_admin_token");
+    localStorage.removeItem("evently_admin_email");
+
+    navigate("/login");
+  };
+
   const handleEdit = (event) => {
     setEditingId(event.id);
 
@@ -125,6 +134,10 @@ function Admin() {
     }
   };
 
+  const handleView = (id) => {
+    navigate(`/events/${id}`);
+  };
+
   const cancelForm = () => {
     setForm(emptyForm);
     setEditingId(null);
@@ -138,12 +151,13 @@ function Admin() {
       <main className="admin-page">
         <div className="admin-header">
           <div>
-            <p className="section-label">ADMINISTRATION</p>
-
-            <h1>Event Management</h1>
-
-            <p>Create, update and manage platform events.</p>
+            <h1>Admin Dashboard</h1>
+            <p>Manage your events</p>
           </div>
+
+          <button className="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
 
           <button
             className="add-event-btn"
@@ -367,15 +381,22 @@ function Admin() {
 
                 <div className="actions">
                   <button
-                    onClick={() => handleEdit(event)}
+                    className="view-btn"
+                    onClick={() => handleView(event.id)}
+                  >
+                    View
+                  </button>
+
+                  <button
                     className="edit-btn"
+                    onClick={() => handleEdit(event)}
                   >
                     Edit
                   </button>
 
                   <button
-                    onClick={() => handleDelete(event.id)}
                     className="delete-btn"
+                    onClick={() => handleDelete(event.id)}
                   >
                     Delete
                   </button>

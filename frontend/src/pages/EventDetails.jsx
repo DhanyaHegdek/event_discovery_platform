@@ -41,6 +41,7 @@ function EventDetails() {
     return (
       <>
         <Navbar />
+
         <div className="state">
           <h3>Event not found</h3>
           <Link to="/">← Back to events</Link>
