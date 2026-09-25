@@ -17,7 +17,7 @@ class EventBase(BaseModel):
 
     category: str
     industry: str | None = None
-
+    slug: str
     start_date: datetime
     end_date: datetime
 
@@ -77,4 +77,4 @@ class EventResponse(EventBase):
 
     model_config = ConfigDict(
         from_attributes=True
-    )
+    )       

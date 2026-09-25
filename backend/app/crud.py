@@ -16,9 +16,8 @@ def get_events(
 
         query = query.filter(
             (models.Event.name.ilike(search_term))
-            | (models.Event.venue.ilike(search_term))
             | (models.Event.city.ilike(search_term))
-            | (models.Event.country.ilike(search_term))
+            | (models.Event.location.ilike(search_term))
         )
 
     if category:
@@ -49,15 +48,9 @@ def create_event(
     db: Session,
     event: schemas.EventCreate
 ):
-    event_data = event.model_dump()
-
-    if event_data.get("website"):
-        event_data["website"] = str(event_data["website"])
-
-    if event_data.get("image"):
-        event_data["image"] = str(event_data["image"])
-
-    db_event = models.Event(**event_data)
+    db_event = models.Event(
+        **event.model_dump(mode="json")
+    )
 
     db.add(db_event)
     db.commit()
@@ -65,24 +58,22 @@ def create_event(
 
     return db_event
 
-def update_event(db, event_id, event):
-    db_event = db.query(models.Event).filter(
-        models.Event.id == event_id
-    ).first()
+
+def update_event(
+    db: Session,
+    event_id: int,
+    event: schemas.EventUpdate
+):
+    db_event = get_event(db, event_id)
 
     if not db_event:
         return None
 
-    event_data = event.model_dump()
+    update_data = event.model_dump(
+        exclude_unset=True
+    )
 
-    # Convert Pydantic HttpUrl objects to normal strings
-    if event_data.get("website"):
-        event_data["website"] = str(event_data["website"])
-
-    if event_data.get("image"):
-        event_data["image"] = str(event_data["image"])
-
-    for key, value in event_data.items():
+    for key, value in update_data.items():
         setattr(db_event, key, value)
 
     db.commit()

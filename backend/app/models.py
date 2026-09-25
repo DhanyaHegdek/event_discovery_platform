@@ -12,7 +12,7 @@ class Event(Base):
 
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
-
+    slug = Column(String, unique=True, nullable=False, index=True)
     category = Column(String(100), nullable=False)
     industry = Column(String(100), nullable=True)
 

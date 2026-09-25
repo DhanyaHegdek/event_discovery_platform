@@ -6,7 +6,7 @@ import { getEvent } from "../services/api";
 
 function EventDetails() {
   const { id } = useParams();
-
+  const { slug } = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
 

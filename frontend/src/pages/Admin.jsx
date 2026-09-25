@@ -134,9 +134,26 @@ function Admin() {
     }
   };
 
-  const handleView = (id) => {
-    navigate(`/events/${id}`);
+  //   const handleView = (id) => {
+  //     navigate(`/events/${id}`);
+  //   };
+
+  const createSlug = (name) => {
+    return name
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   };
+
+  const handleView = (event) => {
+    const slug = createSlug(event.name);
+    navigate(`/events/${slug}`);
+  };
+
+  //   <button className="view-btn" onClick={() => handleView(event)}>
+  //     View
+  //   </button>;
 
   const cancelForm = () => {
     setForm(emptyForm);
@@ -382,7 +399,7 @@ function Admin() {
                 <div className="actions">
                   <button
                     className="view-btn"
-                    onClick={() => handleView(event.id)}
+                    onClick={() => handleView(event)}
                   >
                     View
                   </button>
