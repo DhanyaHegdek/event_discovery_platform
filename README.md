@@ -1200,6 +1200,4 @@ GitHub
 
 ---
 
-# 📄 License
 
-This project was developed as part of a technical assessment and demonstrates full-stack web development using React, FastAPI, and PostgreSQL.
